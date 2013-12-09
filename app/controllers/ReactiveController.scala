@@ -14,7 +14,7 @@ import reactivemongo.api.Cursor
 abstract class ReactiveController[T](implicit ctx: ExecutionContext, format: Format[T]) extends ReactiveMongoAutoSourceController[T] {
 
   def find(key: String, value: String) = Future {
-    Async {
+    Async { 
       val cursor: Cursor[JsObject] = coll.
         find(Json.obj(key -> value)).
         cursor[JsObject]
@@ -29,4 +29,5 @@ abstract class ReactiveController[T](implicit ctx: ExecutionContext, format: For
       }
     }
   }
+      
 } 

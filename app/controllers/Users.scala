@@ -15,7 +15,7 @@ object Users extends ReactiveController[JsObject] {
   def findByUsername(username: String) = Action {
     Async {
       find("username", username)
-    }
+    } 
   }
 
   def findByEmail(email: String) = Action {

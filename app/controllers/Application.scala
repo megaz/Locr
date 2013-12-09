@@ -37,4 +37,4 @@ object Application extends Controller with MongoController {
         Ok("Mongo LastErorr:%s".format(lastError)))
     }
   }
-}
+} 

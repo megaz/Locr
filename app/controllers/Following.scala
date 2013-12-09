@@ -29,53 +29,49 @@ object Following extends ReactiveController[JsObject] {
   override val reader = __.read[JsObject] keepAnd (
     (__ \ "followingid").readNullable[Option[List[String]]])
 
-  def followAction(result: Int, id: String): SimpleResult = {
+  def followAction(result: Int, userId: String, followUserId: String): SimpleResult = {
     if (result > 0) {
+      Followers.addFollower(userId, followUserId)
       Logger.info("Updated and followed " + result);
-      Ok("Followed user " + id)
+      Ok("Followed user " + followUserId)
     } else {
       Ok("No documents updated ")
     }
   }
 
-  def followUser() = Action(parse.json) { request =>
+  def followUser() = Action.async(parse.json) { request =>
     val paramVal = request.body;
-    val id: String = (paramVal \ "userid").as[String]
-    val userId: String = (paramVal \ "follow").as[String]
-    Async {
+    val userId: String = (paramVal \ "userid").as[String]
+    val followUserId: String = (paramVal \ "follow").as[String]
+    Cache.remove("followcount" + userId)
       coll.update(
-        Json.obj("userid" -> id),
-        Json.obj("$addToSet" -> Json.obj("followingId" -> userId))).map {
+        Json.obj("userid" -> userId),
+        Json.obj("$addToSet" -> Json.obj("followingId" -> followUserId))).map {
 
-          case (updated) => followAction(updated.n, id)
+          case (updated) => followAction(updated.n, userId, followUserId)
           case t => {
-            BadRequest("Could not follow user " + id + " cause " + t.getMessage)
+            BadRequest("Could not follow user " + userId + " cause " + t.getMessage)
           }
-        }
-    }
+    } 
+  } 
+
+  def unfollowUser() = Action(parse.json) { request =>
+
+    val paramVal = request.body;
+    val userId: String = (paramVal \ "userid").as[String]
+    val followUserId: String = (paramVal \ "unfollow").as[String]	
+    Followers.removeFollower(userId, followUserId)
+    Cache.remove("followcount" + userId)
+    coll.update(
+      Json.obj("userid" -> userId),
+      Json.obj("$pull" -> Json.obj("followingId" -> followUserId)))
+
+    Ok("deleted")
   }
 
-  /*
-    def userFollowingCount(userId : String) = Action {
-    Async {
-    	
-      val command = Aggregate("following", Seq(
-    //  GroupField("followingId")("followingId" -> SumValue(1)),
-      Match(BSONDocument("userid" -> userId))
-    ))
-    val result = coll.db.command(command)
-      result.map { value => {
-       Ok("got value" + value )
-      }
+  def userFollowingCount(userId: String) = Action.async  {
 
-    }
-  } 
- } 
-   */
-  def userFollowingCount(userId: String) = Action {
-    Async {
-
-      val followingCount = Cache.getOrElse("followcount" + userId, 5) {
+      val followingCount = Cache.getOrElse("followcount" + userId, 3600 * 60) {
         Logger.info("Getting from mongo")
         coll.db.command(Aggregate("following", Seq(Unwind("followingId"), Match(BSONDocument("userid" -> userId)))))
       }
@@ -83,7 +79,5 @@ object Following extends ReactiveController[JsObject] {
       followingCount.map { count =>
         Ok(Json.toJson(count.toList.size))
       }
-    }
   }
-
 }

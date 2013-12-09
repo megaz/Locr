@@ -17,16 +17,14 @@ import reactivemongo.bson.BSONDocument
 import com.github.t3hnar.bcrypt._
 import play.mvc.Result
 
-object Authentication extends ReactiveController[JsObject]  {
+object Authentication extends ReactiveController[JsObject] {
 
-  
   object AuthMessages {
-      val UserUnauthorized = "Username/Password Incorrect"
+    val UserUnauthorized = "Username/Password Incorrect"
   }
-  
+
   lazy val coll = db.collection[JSONCollection]("users")
-  
-  
+
   def checkPassword(requestPassword: String, hashPassword: JsObject): Boolean = {
     val hashPass: String = (hashPassword \ "password").as[String]
 
@@ -42,19 +40,18 @@ object Authentication extends ReactiveController[JsObject]  {
   def loggedInAction(username: String): SimpleResult = {
     Ok("Authorized").withSession("username" -> username)
   }
-  
+
   def logout = Action {
     Ok("logged out").withNewSession
   }
 
-  def login =  Action(parse.json) { request =>
+  def login = Action.async(parse.json) { request =>
 
     val paramVal = request.body;
 
     val username: String = (paramVal \ "username").as[String]
     val password: String = (paramVal \ "password").as[String]
-    
-    Async {
+
       val cursor = coll.find(Json.obj("username" -> username)).cursor[JsObject]
       val futureJsValue: Future[Option[JsObject]] = cursor.headOption
 
@@ -65,8 +62,6 @@ object Authentication extends ReactiveController[JsObject]  {
       futureJsValue.map {
         case Some(x) => if (checkPassword(password, x)) loggedInAction(username) else Unauthorized(AuthMessages.UserUnauthorized)
         case None => Unauthorized(AuthMessages.UserUnauthorized)
-
-      }
     }
   }
 }
