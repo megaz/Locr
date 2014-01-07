@@ -23,14 +23,17 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies).settings(
     resolvers ++= mandubianRepo ++ sonatypeRepo,
     resolvers += Resolver.url("sbt-plugin-snapshots", new URL("http://repo.scala-sbt.org/scalasbt/sbt-plugin-snapshots/"))(Resolver.ivyStylePatterns),
+resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     libraryDependencies ++= Seq(
-      "play-autosource"   %% "reactivemongo"       % "1.0-SNAPSHOT",
       "com.google.code.gson" % "gson" % "2.2.4",
       "org.specs2"        %% "specs2"              % "1.13"        % "test",
       "junit"              % "junit"               % "4.8"         % "test",
       "com.github.t3hnar" % "scala-bcrypt_2.10" % "2.3",
-       "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.1"
+      "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.1",
+      "org.reactivemongo" %% "play2-reactivemongo" % "0.10.1",
+      "play-autosource" %% "core" % "2.0"
     )
+
   )
 
 }
