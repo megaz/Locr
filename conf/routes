@@ -2,24 +2,28 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-->      /users                    controllers.Users
+->     /users                    controllers.Users
 
-->      /following                controllers.Following
+->     /following                controllers.Following
 
-->      /followers                controllers.Followers
+->     /followers                controllers.Followers
 
-GET    /user                      controllers.Users.findByUsername(username: String)
+GET    /user/email/:email        controllers.Users.findByEmail(email: String) 
 
-GET    /user                      controllers.Users.findByEmail(email: String)
+GET    /user/username/:username  controllers.Users.findByUsername(username: String)
 
-GET    /user/following            controllers.Following.userFollowingCount(userid: String)
+GET    /user/following           controllers.Following.userFollowingCount(userid: String)
 
-POST    /login                    controllers.Authentication.login
+GET    /user/followers           controllers.Followers.userFollowersCount(userid: String)
 
-POST    /logout                   controllers.Authentication.logout
+POST   /login                    controllers.Authentication.login
 
-POST   /follow                    controllers.Following.followUser
+POST   /logout                   controllers.Authentication.logout
+
+POST   /follow                   controllers.Following.followUser
+
+DELETE /unfollow                 controllers.Following.unfollowUser
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file            controllers.Assets.at(path="/public", file)
