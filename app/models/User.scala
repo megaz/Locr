@@ -18,7 +18,7 @@ import org.joda.time.DateTime
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-case class User(username: String, password: String, email: String, name: Option[String], phone : Option[String], registerDate : DateTime)
+case class User(username: String, password: String, email: String, name: Option[String], phone : Option[String], registerDate : Option[DateTime])
 
 object User{
   implicit val fmt = Json.format[User]
