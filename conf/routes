@@ -2,7 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-->     /users                    controllers.Users
+# TODO: Complete routes for Users
+#->     /users                    controllers.Users
+
+POST    /registration/createUser  controllers.Registration.createUser
 
 ->     /following                controllers.Following
 

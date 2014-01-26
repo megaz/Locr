@@ -31,7 +31,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
       "com.github.t3hnar" % "scala-bcrypt_2.10" % "2.3",
       "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.1",
       "org.reactivemongo" %% "play2-reactivemongo" % "0.10.1",
-      "play-autosource" %% "core" % "2.0"
+      "play-autosource" %% "core" % "2.0",
+      "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
     )
 
   )
