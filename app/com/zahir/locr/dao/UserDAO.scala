@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 /**
- * Copyright 2013 Zahir Abdi (@megaz)
+ * Copyright 2014 Zahir Abdi (@megaz)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ class UserDAO extends BaseDAO[User]("users") {
 
   def findByEmail(email: String): Future[Option[User]] = find("email", email)
 
-  def createUser(user: User): Future[LastError] = collection.insert(user)
+  def createUser(user: User): Future[LastError] = insert(user)
 
 } 
+

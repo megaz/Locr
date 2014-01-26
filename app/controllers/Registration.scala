@@ -11,7 +11,7 @@ import play.api.libs.json.JsError
 import com.zahir.locr.dao.UserDAO
 import play.api.mvc.SimpleResult
 /**
- * Copyright 2013 Zahir Abdi (@megaz)
+ * Copyright 2014 Zahir Abdi (@megaz)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

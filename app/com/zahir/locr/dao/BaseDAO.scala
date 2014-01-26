@@ -12,7 +12,7 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.core.commands.LastError
 
 /**
- * Copyright 2013 Zahir Abdi (@megaz)
+ * Copyright 2014 Zahir Abdi (@megaz)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,5 +40,5 @@ abstract class BaseDAO[T](collectionName: String)(implicit reads: Reads[T], writ
   }
 
   def insert(t: T): Future[LastError] = collection.insert(t)
- 
+
 }

@@ -15,7 +15,7 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
 import reactivemongo.core.commands.Drop
 /**
- * Copyright 2013 Zahir Abdi (@megaz)
+ * Copyright 2014 Zahir Abdi (@megaz)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,14 +31,7 @@ import reactivemongo.core.commands.Drop
  */
 class TestUserDAO extends DAOTestSuite with BeforeAndAfter {
 
-  val userDAO = createUserDao 
-    
-    new UserDAO {
-    override def coll: JSONCollection = db.collection[JSONCollection]("users_test")
-    lazy val driver = new MongoDriver
-    val connection = driver.connection(List("localhost"))
-    override lazy val db = DB("locr_test", connection)
-  }
+  val userDAO = createUserDao
 
   test("Persist and find User from UserDAO") {
     running(FakeApplication()) {
@@ -61,3 +54,4 @@ class TestUserDAO extends DAOTestSuite with BeforeAndAfter {
     userDAO.coll.drop
   }
 }
+
